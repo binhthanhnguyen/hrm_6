@@ -12,6 +12,8 @@
 bin/
 gen/
 
+*/gen/
+
 # Gradle files
 .gradle/
 build/
@@ -30,3 +32,18 @@ proguard/
 
 # Android Studio captures folder
 captures/
+.DS_Store
+.idea/*.*
+*.iml
+.gitignore~
+gradle/*
+/local.properties
+/.idea/
+.DS_Store
+/build
+/captures
+gradlew
+gradlew.bat
+app/src/main/gen/
+app/src/test
+app/src/androidTest

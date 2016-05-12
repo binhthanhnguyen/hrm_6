@@ -24,7 +24,7 @@ public class EmployeeDAO extends DbContentProvider{
 
     public static EmployeeDAO getInstance(Context context) {
         if (sInstance == null){
-            sInstance = new EmployeeDAO(context);
+            sInstance = new EmployeeDAO(context.getApplicationContext());
         }
         return sInstance;
     }

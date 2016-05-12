@@ -25,7 +25,7 @@ public class DepartmentDAO extends DbContentProvider{
 
     public static DepartmentDAO getInstance(Context context){
         if (sInstance == null){
-            sInstance = new DepartmentDAO(context);
+            sInstance = new DepartmentDAO(context.getApplicationContext());
         }
         return  sInstance;
     }

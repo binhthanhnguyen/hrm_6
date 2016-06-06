@@ -39,7 +39,6 @@ captures/
 gradle/*
 /local.properties
 /.idea/
-.DS_Store
 /build
 /captures
 gradlew
@@ -47,3 +46,4 @@ gradlew.bat
 app/src/main/gen/
 app/src/test
 app/src/androidTest
+gradle/

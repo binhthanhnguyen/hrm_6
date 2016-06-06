@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 
 import com.framgia.nguyen.hrm_6.db.DatabaseContract;
-import com.framgia.nguyen.hrm_6.models.Department;
 import com.framgia.nguyen.hrm_6.models.Employee;
 
 import java.util.ArrayList;
@@ -77,11 +76,44 @@ public class EmployeeDAO extends DbContentProvider{
         return employees;
     }
 
+    public List<Employee> findEmployeesByDepartmentId(int departmentId, int offset, int limit) {
+        List<Employee> employees = new ArrayList<Employee>();
+        open();
+        Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null,
+                DatabaseContract.EmployeeTable.DEPARTMENT_ID + " = ?",
+                new String[] {String.valueOf(departmentId)}, null, null,
+                DatabaseContract.EmployeeTable.NAME + " DESC", offset + ", " + limit);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                employees.add(new Employee(cursor));
+            }
+        }
+        cursor.close();
+        close();
+        return employees;
+    }
+
+
     public List<Employee> getAllEmployees() throws SQLException {
         List<Employee> employees = new ArrayList<Employee>();
         open();
         Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null, null, null, null, null, null );
-        if (cursor.getCount() > 0){
+        if (cursor != null && cursor.getCount() > 0){
+            while (cursor.moveToNext()) {
+                employees.add(new Employee(cursor));
+            }
+        }
+        cursor.close();
+        close();
+        return employees;
+    }
+
+    public List<Employee> getEmployees(int offset, int limit) {
+        List<Employee> employees = new ArrayList<>();
+        open();
+        Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null, null, null, null, null,
+                DatabaseContract.EmployeeTable.NAME + " DESC", offset + ", " + limit);
+        if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 employees.add(new Employee(cursor));
             }
@@ -104,7 +136,8 @@ public class EmployeeDAO extends DbContentProvider{
 
         try {
             mDatabase.update(DatabaseContract.EmployeeTable.TABLE_NAME, contentValues,
-                    "id = ? ", new String[]{String.valueOf(employee.getId())});
+                    DatabaseContract.EmployeeTable.ID + " = ? ",
+                    new String[]{String.valueOf(employee.getId())});
         } catch (SQLException e){
             e.printStackTrace();
             return false;

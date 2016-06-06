@@ -15,6 +15,7 @@ import com.framgia.nguyen.hrm_6.models.Department;
 import com.framgia.nguyen.hrm_6.models.Employee;
 import com.framgia.nguyen.hrm_6.ui.adapters.EmployeeListAdapter;
 import com.framgia.nguyen.hrm_6.ui.widget.recyclerview.DividerItemDecoration;
+import com.framgia.nguyen.hrm_6.ui.widget.recyclerview.EndlessRecyclerViewScrollListener;
 
 import java.util.List;
 
@@ -23,11 +24,13 @@ import java.util.List;
  */
 public class DepartmentDetailActivity extends AppCompatActivity {
     private static final String TAG = "DepartmentDetailActivity";
+    public static final int PER_PAGE = 30;
 
     private static final String EXTRA_DEPARTMENT = "EXTRA_DEPARTMENT";
     private List<Employee> mEmployees;
     private RecyclerView mRecyclerView;
     private Department mDepartment;
+    private EmployeeDAO mEmployeeDAO;
 
     public static Intent newIntent(Context context, Department department) {
         Intent intent = new Intent(context, DepartmentDetailActivity.class);
@@ -45,8 +48,8 @@ public class DepartmentDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mDepartment = (Department) intent.getSerializableExtra(EXTRA_DEPARTMENT);
-        EmployeeDAO employeeDAO = EmployeeDAO.getInstance(getApplicationContext());
-        mEmployees = employeeDAO.findEmployeesByDepartmentId(mDepartment.getId());
+        mEmployeeDAO = EmployeeDAO.getInstance(getApplicationContext());
+        mEmployees = mEmployeeDAO.findEmployeesByDepartmentId(mDepartment.getId(), 0, PER_PAGE);
 
         setupView();
     }
@@ -67,8 +70,17 @@ public class DepartmentDetailActivity extends AppCompatActivity {
         textDesc.setText(mDepartment.getDesc());
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new EmployeeListAdapter(mEmployees));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        final EmployeeListAdapter employeeListAdapter = new EmployeeListAdapter(mEmployees);
+        mRecyclerView.setAdapter(employeeListAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        mRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                mEmployees.addAll(mEmployeeDAO.findEmployeesByDepartmentId(mDepartment.getId(), totalItemsCount, PER_PAGE));
+                employeeListAdapter.notifyItemRangeChanged(totalItemsCount, mEmployees.size() -1);
+            }
+        });
     }
 }

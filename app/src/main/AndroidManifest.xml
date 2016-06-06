@@ -30,6 +30,10 @@
             android:label="@string/label_employees"
             android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
+
+        <activity android:name=".ui.activities.EmployeeActivity"
+            android:label="@string/label_new_employee">
+        </activity>
     </application>
 
 </manifest>

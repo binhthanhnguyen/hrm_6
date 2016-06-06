@@ -3,12 +3,8 @@ package com.framgia.nguyen.hrm_6.ui.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
 import com.framgia.nguyen.hrm_6.ui.fragments.DepartmentListFragment;
 import com.framgia.nguyen.hrm_6.ui.fragments.EmployeeListFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by binh on 6/6/16.

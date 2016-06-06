@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import com.framgia.nguyen.hrm_6.R;
 import com.framgia.nguyen.hrm_6.ui.adapters.PagerAdapter;
-import com.framgia.nguyen.hrm_6.ui.fragments.DepartmentListFragment;
-import com.framgia.nguyen.hrm_6.ui.fragments.EmployeeListFragment;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";

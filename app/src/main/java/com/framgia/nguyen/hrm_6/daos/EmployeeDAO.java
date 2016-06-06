@@ -50,10 +50,10 @@ public class EmployeeDAO extends DbContentProvider{
 
     public Employee getEmployee(int employeeId) throws SQLException {
         open();
-        Cursor cursor = mDatabase.query(DatabaseContract.DepartmentTable.TABLE_NAME, null,
+        Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null,
                 DatabaseContract.EmployeeTable.ID + " = ?",
                 new String[]{String.valueOf(employeeId)}, null, null, null, null);
-        if (cursor == null)
+        if (cursor != null)
             cursor.moveToFirst();
         Employee employee = new Employee(cursor);
         close();
@@ -127,8 +127,8 @@ public class EmployeeDAO extends DbContentProvider{
         open();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseContract.EmployeeTable.NAME, employee.getName());
-        contentValues.put(DatabaseContract.EmployeeTable.DATE_OF_BIRTH, employee.getPlaceOfBirth());
-        contentValues.put(DatabaseContract.EmployeeTable.PLACE_OF_BIRTH, employee.getDateOfBirth());
+        contentValues.put(DatabaseContract.EmployeeTable.DATE_OF_BIRTH, employee.getDateOfBirth());
+        contentValues.put(DatabaseContract.EmployeeTable.PLACE_OF_BIRTH, employee.getPlaceOfBirth());
         contentValues.put(DatabaseContract.EmployeeTable.PHONE, employee.getPhone());
         contentValues.put(DatabaseContract.EmployeeTable.STATUS, employee.getStatus().code());
         contentValues.put(DatabaseContract.EmployeeTable.POSITION, employee.getPosition().code());

@@ -75,6 +75,12 @@ public class DepartmentDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUi();
+    }
+
     private void setupView() {
         TextView textName = (TextView) findViewById(R.id.text_name);
         textName.setText(mDepartment.getName());

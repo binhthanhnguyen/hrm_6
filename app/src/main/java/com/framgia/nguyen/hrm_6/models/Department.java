@@ -4,10 +4,12 @@ import android.database.Cursor;
 
 import com.framgia.nguyen.hrm_6.db.DatabaseContract;
 
+import java.io.Serializable;
+
 /**
  * Created by nguyen on 2/23/16.
  */
-public class Department {
+public class Department implements Serializable{
     private int mId;
     private String mName;
     private String mDesc;

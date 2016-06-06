@@ -51,15 +51,8 @@ public class EmployeeDAO extends DbContentProvider{
 
     public Employee getEmployee(int employeeId) throws SQLException {
         open();
-        Cursor cursor = mDatabase.query(DatabaseContract.DepartmentTable.TABLE_NAME,
-                new String[]{"id", DatabaseContract.EmployeeTable.NAME,
-                        DatabaseContract.EmployeeTable.DATE_OF_BIRTH,
-                        DatabaseContract.EmployeeTable.PLACE_OF_BIRTH,
-                        DatabaseContract.EmployeeTable.PHONE,
-                        DatabaseContract.EmployeeTable.STATUS,
-                        DatabaseContract.EmployeeTable.POSITION,
-                        DatabaseContract.EmployeeTable.DEPARTMENT_ID},
-                "id = ?",
+        Cursor cursor = mDatabase.query(DatabaseContract.DepartmentTable.TABLE_NAME, null,
+                DatabaseContract.EmployeeTable.ID + " = ?",
                 new String[]{String.valueOf(employeeId)}, null, null, null, null);
         if (cursor == null)
             cursor.moveToFirst();
@@ -68,8 +61,25 @@ public class EmployeeDAO extends DbContentProvider{
         return employee;
     }
 
+    public List<Employee> findEmployeesByDepartmentId(int departmentId) {
+        List<Employee> employees = new ArrayList<Employee>();
+        open();
+        Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null,
+                DatabaseContract.EmployeeTable.DEPARTMENT_ID + " = ?",
+                new String[] {String.valueOf(departmentId)}, null, null, null, null);
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                employees.add(new Employee(cursor));
+            }
+        }
+        cursor.close();
+        close();
+        return employees;
+    }
+
     public List<Employee> getAllEmployees() throws SQLException {
         List<Employee> employees = new ArrayList<Employee>();
+        open();
         Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null, null, null, null, null, null );
         if (cursor.getCount() > 0){
             while (cursor.moveToNext()) {
@@ -77,6 +87,7 @@ public class EmployeeDAO extends DbContentProvider{
             }
         }
         cursor.close();
+        close();
         return employees;
     }
 
@@ -105,7 +116,7 @@ public class EmployeeDAO extends DbContentProvider{
     public boolean delete(Employee employee) throws SQLException {
         open();
         try {
-            mDatabase.delete(DatabaseContract.EmployeeTable.TABLE_NAME, "id = ?", new String[]{String.valueOf(employee.getId())});
+            mDatabase.delete(DatabaseContract.EmployeeTable.TABLE_NAME, DatabaseContract.EmployeeTable.ID + " = ?", new String[]{String.valueOf(employee.getId())});
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

@@ -46,10 +46,10 @@ public class DepartmentDAO extends DbContentProvider{
 
     public Department getDepartment(int departmentId) throws SQLException {
         open();
-        Cursor cursor = mDatabase.query(DatabaseContract.DepartmentTable.TABLE_NAME,
-                new String[]{"id", DatabaseContract.DepartmentTable.NAME, DatabaseContract.DepartmentTable.DESC}, "id = ?",
+        Cursor cursor = mDatabase.query(DatabaseContract.DepartmentTable.TABLE_NAME, null,
+                DatabaseContract.DepartmentTable.ID + " = ?",
                 new String[]{String.valueOf(departmentId)}, null, null, null, null);
-        if (cursor == null)
+        if (cursor != null)
             cursor.moveToFirst();
         Department department = new Department(cursor);
         cursor.close();
@@ -61,7 +61,7 @@ public class DepartmentDAO extends DbContentProvider{
         open();
         List<Department> departments = new ArrayList<Department>();
         Cursor cursor = mDatabase.query(DatabaseContract.DepartmentTable.TABLE_NAME, null, null, null, null, null, null );
-        if (cursor.getCount() > 0){
+        if (cursor != null && cursor.getCount() > 0){
             while (cursor.moveToNext()) {
                 departments.add(new Department(cursor));
             }
@@ -78,7 +78,8 @@ public class DepartmentDAO extends DbContentProvider{
         contentValues.put(DatabaseContract.DepartmentTable.DESC, department.getDesc());
         try {
             mDatabase.update(DatabaseContract.DepartmentTable.TABLE_NAME, contentValues,
-                    "id = ? ", new String[]{String.valueOf(department.getId())});
+                    DatabaseContract.DepartmentTable.ID + " = ? ",
+                    new String[]{String.valueOf(department.getId())});
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -91,7 +92,9 @@ public class DepartmentDAO extends DbContentProvider{
     public boolean delete(Department department) throws SQLException{
         open();
         try {
-            mDatabase.delete(DatabaseContract.DepartmentTable.TABLE_NAME, "id = ?", new String[]{String.valueOf(department.getId())});
+            mDatabase.delete(DatabaseContract.DepartmentTable.TABLE_NAME,
+                    DatabaseContract.DepartmentTable.ID + " = ?",
+                    new String[]{String.valueOf(department.getId())});
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

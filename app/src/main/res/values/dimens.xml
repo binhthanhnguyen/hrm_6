@@ -10,8 +10,10 @@
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_large">32dp</dimen>
     <dimen name="margin_huge">64dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
 
     <dimen name="id_width">25dp</dimen>
     <dimen name="avatar_size">40dp</dimen>
+    <dimen name="avatar_size_medium">60dp</dimen>
     <dimen name="name_width">150dp</dimen>
 </resources>

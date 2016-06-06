@@ -1,5 +1,6 @@
 package com.framgia.nguyen.hrm_6.ui.adapters;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.framgia.nguyen.hrm_6.R;
 import com.framgia.nguyen.hrm_6.models.Employee;
+import com.framgia.nguyen.hrm_6.ui.activities.EmployeeDetailActivity;
 import java.util.List;
 
 /**
@@ -28,8 +30,14 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapte
 
     @Override
     public void onBindViewHolder(EmployeeListAdapter.EmployeeHolder holder, int position) {
-        Employee employee = mEmployees.get(position);
+        final Employee employee = mEmployees.get(position);
         holder.bindEmployeeItem(employee);
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EmployeeDetailActivity.newIntent(v.getContext(), employee);
+            }
+        });
     }
 
     @Override
@@ -45,6 +53,7 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapte
 
         public EmployeeHolder(View itemView) {
             super(itemView);
+            mView = itemView;
             mTextId = (TextView) itemView.findViewById(R.id.text_id);
             mTextName = (TextView) itemView.findViewById(R.id.text_name);
             mTextPosition = (TextView) itemView.findViewById(R.id.text_position);

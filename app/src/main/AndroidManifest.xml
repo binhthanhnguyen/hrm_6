@@ -24,6 +24,12 @@
             android:label="@string/label_departments"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <activity
+            android:name=".ui.activities.EmployeeDetailActivity"
+            android:label="@string/label_employees"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
     </application>
 
 </manifest>

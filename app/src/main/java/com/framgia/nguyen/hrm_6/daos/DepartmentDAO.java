@@ -4,10 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.framgia.nguyen.hrm_6.db.DatabaseContract;
-import com.framgia.nguyen.hrm_6.db.DatabaseHelpler;
 import com.framgia.nguyen.hrm_6.models.Department;
 
 import java.util.ArrayList;
@@ -33,6 +31,7 @@ public class DepartmentDAO extends DbContentProvider{
     public boolean insert(Department department) throws SQLException{
         open();
         ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseContract.DepartmentTable.ID, department.getId());
         contentValues.put(DatabaseContract.DepartmentTable.NAME, department.getName());
         contentValues.put(DatabaseContract.DepartmentTable.DESC, department.getDesc());
         try {
@@ -45,17 +44,21 @@ public class DepartmentDAO extends DbContentProvider{
         return true;
     }
 
-    public Department getDeparment(int departmentId) throws SQLException {
+    public Department getDepartment(int departmentId) throws SQLException {
+        open();
         Cursor cursor = mDatabase.query(DatabaseContract.DepartmentTable.TABLE_NAME,
                 new String[]{"id", DatabaseContract.DepartmentTable.NAME, DatabaseContract.DepartmentTable.DESC}, "id = ?",
                 new String[]{String.valueOf(departmentId)}, null, null, null, null);
         if (cursor == null)
             cursor.moveToFirst();
         Department department = new Department(cursor);
+        cursor.close();
+        close();
         return department;
     }
 
     public List<Department> getAllDepartments() throws SQLException{
+        open();
         List<Department> departments = new ArrayList<Department>();
         Cursor cursor = mDatabase.query(DatabaseContract.DepartmentTable.TABLE_NAME, null, null, null, null, null, null );
         if (cursor.getCount() > 0){
@@ -64,6 +67,7 @@ public class DepartmentDAO extends DbContentProvider{
             }
         }
         cursor.close();
+        close();
         return departments;
     }
 

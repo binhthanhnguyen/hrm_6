@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Created by nguyen on 2/23/16.
  */
-public class DatabaseHelpler extends SQLiteOpenHelper{
+public class DatabaseHelper extends SQLiteOpenHelper{
 
     /**
      * DATABASE VERSION
@@ -21,6 +21,7 @@ public class DatabaseHelpler extends SQLiteOpenHelper{
     private static final String DATE_TYPE = " DATE";
     private static final String DATETIME_TYPE = " DATETIME";
     private static final String INTEGER_TYPE = " INTEGER";
+    private static final String PRIMARY_KEY = " PRIMARY KEY AUTOINCREMENT";
     private static final String COMMA = ", ";
 
     /**
@@ -28,6 +29,7 @@ public class DatabaseHelpler extends SQLiteOpenHelper{
      */
     private static final String CREATE_EMPLOYEE_TABLE = "CREATE TABLE "
             + DatabaseContract.EmployeeTable.TABLE_NAME + " ("
+            + DatabaseContract.EmployeeTable.ID + INTEGER_TYPE + PRIMARY_KEY + COMMA
             + DatabaseContract.EmployeeTable.NAME + TEXT_TYPE + COMMA
             + DatabaseContract.EmployeeTable.PLACE_OF_BIRTH + TEXT_TYPE + COMMA
             + DatabaseContract.EmployeeTable.DATE_OF_BIRTH + DATE_TYPE + COMMA
@@ -41,6 +43,7 @@ public class DatabaseHelpler extends SQLiteOpenHelper{
      */
     private static final String CREATE_DEPARTMENT_TABLE = "CREATE TABLE "
             + DatabaseContract.DepartmentTable.TABLE_NAME + " ("
+            + DatabaseContract.DepartmentTable.ID + INTEGER_TYPE + PRIMARY_KEY + COMMA
             + DatabaseContract.DepartmentTable.NAME + TEXT_TYPE + COMMA
             + DatabaseContract.DepartmentTable.DESC + TEXT_TYPE + " )";
 
@@ -50,7 +53,7 @@ public class DatabaseHelpler extends SQLiteOpenHelper{
     public static final String DROP_EMPLOYEE_TABLE = "DROP TABLE IF EXISTS "+ DatabaseContract.EmployeeTable.TABLE_NAME;
     public static final String DROP_DEPARTMENT_TABLE = "DROP TABLE IF EXISTS "+ DatabaseContract.DepartmentTable.TABLE_NAME;
 
-    public DatabaseHelpler(Context context) {
+    public DatabaseHelper(Context context) {
         super(context, DatabaseContract.DB_NAME, null, DATABASE_VERSION);
     }
 

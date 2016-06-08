@@ -4,7 +4,7 @@ package com.framgia.nguyen.hrm_6.models;
  * Created by nguyen on 2/23/16.
  */
 public enum Status {
-    TRAINEE(0, "Irainee"),
+    TRAINEE(0, "Trainee"),
     INTERN(1, "Internship"),
     OFFICIAL_STAFF(2, "Official Staff");
     private int mCode;

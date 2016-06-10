@@ -24,7 +24,7 @@ public class Employee {
         this.mPlaceOfBirth = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.EmployeeTable.PLACE_OF_BIRTH));
         this.mPhone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.EmployeeTable.PHONE));
         this.mStatus = Status.parseStatus(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.EmployeeTable.STATUS)));
-        this.mPosition = Position.parsePosition(cursor.getColumnIndexOrThrow(DatabaseContract.EmployeeTable.POSITION));
+        this.mPosition = Position.parsePosition(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.EmployeeTable.POSITION)));
         this.mDepartmentId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.EmployeeTable.DEPARTMENT_ID));
     }
 

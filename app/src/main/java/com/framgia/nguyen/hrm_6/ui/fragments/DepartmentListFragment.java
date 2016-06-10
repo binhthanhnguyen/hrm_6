@@ -12,9 +12,9 @@ import com.framgia.nguyen.hrm_6.daos.DepartmentDAO;
 import com.framgia.nguyen.hrm_6.models.Department;
 import com.framgia.nguyen.hrm_6.ui.adapters.DepartmentListAdapter;
 import com.framgia.nguyen.hrm_6.ui.widget.recyclerview.DividerItemDecoration;
-
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by binh on 6/6/16.

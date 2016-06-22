@@ -25,11 +25,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textAllCaps="true"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textAllCaps="true" />
+
+        <View style="@style/Divider" />
+        
         <TextView
             android:id="@+id/text_desc"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textStyle="bold|italic" />
     </LinearLayout>
 
     <RelativeLayout

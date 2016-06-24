@@ -26,7 +26,10 @@ import com.framgia.nguyen.hrm_6.models.Employee;
 import com.framgia.nguyen.hrm_6.models.Position;
 import com.framgia.nguyen.hrm_6.models.Status;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,10 +40,8 @@ public class EmployeeActivity extends AppCompatActivity {
     public static final int DATE_PICKER_DIALOG_ID = 999;
     public static final int NEW_EMPLOYEE_REQUEST = 0;
     public static final String EXTRA_DEPARTMENT_ID = "EXTRA_DEPARTMENT_ID";
+    public static final String EXTRA_EMPLOYEE = "EXTRA_EMPLOYEE";
 
-    public int year;
-    public int month;
-    public int day;
     private TextView mTextDateOfBirth;
     private EditText mEditName;
     private EditText mEditPhone;
@@ -48,11 +49,23 @@ public class EmployeeActivity extends AppCompatActivity {
     private int mDepartmentId;
     private Position mPosition;
     private Status mStatus;
+    private Employee mEmployee;
+    private boolean mEditMode;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
 
     public static Intent newIntent(Context context, int departmentId) {
         Intent intent = new Intent(context, EmployeeActivity.class);
         intent.putExtra(EXTRA_DEPARTMENT_ID, departmentId);
         ((Activity) context).startActivityForResult(intent, NEW_EMPLOYEE_REQUEST);
+        return intent;
+    }
+
+    public static Intent newIntent(Context context, Employee employee) {
+        Intent intent = new Intent(context, EmployeeActivity.class);
+        intent.putExtra(EXTRA_EMPLOYEE, employee);
+        context.startActivity(intent);
         return intent;
     }
 
@@ -88,27 +101,26 @@ public class EmployeeActivity extends AppCompatActivity {
     @Override
     protected Dialog onCreateDialog(int id) {
         if (id == DATE_PICKER_DIALOG_ID)
-            return new DatePickerDialog(this, dateSetListener, year, month, day);
+            return new DatePickerDialog(this, dateSetListener, mYear, mMonth, mDay);
         return null;
     }
 
     private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            month = monthOfYear;
-            day = dayOfMonth;
-            mTextDateOfBirth.setText(new StringBuilder().append(month + 1)
-                    .append("-").append(day).append("-").append(year)
-                    .append(" "));
+            mYear = year;
+            mMonth = monthOfYear;
+            mDay = dayOfMonth;
+            mTextDateOfBirth.setText(new StringBuilder().append(mMonth + 1)
+                    .append("-").append(mDay).append("-").append(mYear));
         }
     };
 
     private void setupView() {
-        Calendar calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        mDepartmentId = getIntent().getIntExtra(EXTRA_DEPARTMENT_ID, 0);
+        Intent intent = getIntent();
+        mDepartmentId = intent.getIntExtra(EXTRA_DEPARTMENT_ID, 0);
+        mEmployee = (Employee) intent.getSerializableExtra(EXTRA_EMPLOYEE);
+        if (mEmployee != null) mEditMode = true;
 
         Spinner spinnerDepartment = (Spinner) findViewById(R.id.spinner_department);
         final List<Department> departments = DepartmentDAO.getInstance(this).getAllDepartments();
@@ -174,6 +186,27 @@ public class EmployeeActivity extends AppCompatActivity {
         mEditName = (EditText) findViewById(R.id.edit_name);
         mEditPhone = (EditText) findViewById(R.id.edit_phone);
         mEditPlaceOfBirth = (EditText) findViewById(R.id.edit_place_of_birth);
+
+        Calendar calendar = Calendar.getInstance();
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        if (mEditMode) {
+            mEditName.setText(mEmployee.getName());
+            mEditPhone.setText(mEmployee.getPhone());
+            mEditPlaceOfBirth.setText(mEmployee.getPlaceOfBirth());
+            mTextDateOfBirth.setText(mEmployee.getDateOfBirth());
+            spinnerDepartment.setSelection(mEmployee.getDepartmentId() -1);
+            spinnerPosition.setSelection(mEmployee.getPosition().code());
+            spinnerStatus.setSelection(mEmployee.getStatus().code());
+            if (!mEmployee.getDateOfBirth().isEmpty()) {
+                String date[] = mEmployee.getDateOfBirth().trim().split("-");
+                mMonth = Integer.parseInt(date[0]);
+                mDay = Integer.parseInt(date[1]);
+                mYear = Integer.parseInt(date[2]);
+            }
+        }
     }
 
     private void saveEmployee() {
@@ -182,10 +215,23 @@ public class EmployeeActivity extends AppCompatActivity {
         String placeOfBirth = mEditPlaceOfBirth.getText().toString();
         String phone = mEditPhone.getText().toString();
         if (!name.isEmpty()) {
-            Employee employee = new Employee(dateOfBirth, name, placeOfBirth, mPosition, mStatus, phone, mDepartmentId);
-            EmployeeDAO.getInstance(this).insert(employee);
-            Toast.makeText(this, R.string.message_add_success, Toast.LENGTH_LONG).show();
-            finish();
+            if (mEditMode) {
+                mEmployee.setName(name);
+                mEmployee.setDateOfBirth(dateOfBirth);
+                mEmployee.setDepartmentId(mDepartmentId);
+                mEmployee.setPosition(mPosition);
+                mEmployee.setStatus(mStatus);
+                mEmployee.setPhone(phone);
+                mEmployee.setPlaceOfBirth(placeOfBirth);
+                EmployeeDAO.getInstance(this).update(mEmployee);
+                Toast.makeText(this, R.string.message_update_success, Toast.LENGTH_LONG).show();
+                finish();
+            } else {
+                Employee employee = new Employee(dateOfBirth, name, placeOfBirth, mPosition, mStatus, phone, mDepartmentId);
+                EmployeeDAO.getInstance(this).insert(employee);
+                Toast.makeText(this, R.string.message_add_success, Toast.LENGTH_LONG).show();
+                finish();
+            }
         } else {
             onBackPressed();
         }

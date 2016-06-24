@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import com.framgia.nguyen.hrm_6.R;
 import com.framgia.nguyen.hrm_6.daos.EmployeeDAO;
@@ -31,6 +34,7 @@ public class DepartmentDetailActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private Department mDepartment;
     private EmployeeDAO mEmployeeDAO;
+    private ImageButton mButtonAdd;
 
     public static Intent newIntent(Context context, Department department) {
         Intent intent = new Intent(context, DepartmentDetailActivity.class);
@@ -63,6 +67,14 @@ public class DepartmentDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EmployeeActivity.NEW_EMPLOYEE_REQUEST) {
+            updateUi();
+        }
+    }
+
     private void setupView() {
         TextView textName = (TextView) findViewById(R.id.text_name);
         textName.setText(mDepartment.getName());
@@ -82,5 +94,18 @@ public class DepartmentDetailActivity extends AppCompatActivity {
                 employeeListAdapter.notifyItemRangeChanged(totalItemsCount, mEmployees.size() -1);
             }
         });
+
+        mButtonAdd = (ImageButton) findViewById(R.id.button_add_employee);
+        mButtonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EmployeeActivity.newIntent(v.getContext(), mDepartment.getId());
+            }
+        });
+    }
+
+    private void updateUi() {
+        mEmployees = mEmployeeDAO.findEmployeesByDepartmentId(mDepartment.getId(), 0, PER_PAGE);
+        setupView();
     }
 }

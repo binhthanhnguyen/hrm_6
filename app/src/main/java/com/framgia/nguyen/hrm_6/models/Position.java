@@ -31,4 +31,9 @@ public enum Position {
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        return mDesc;
+    }
 }

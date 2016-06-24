@@ -53,4 +53,9 @@ public class Department implements Serializable{
     public void setDesc(String mDesc) {
         this.mDesc = mDesc;
     }
+
+    @Override
+    public String toString() {
+        return mName;
+    }
 }

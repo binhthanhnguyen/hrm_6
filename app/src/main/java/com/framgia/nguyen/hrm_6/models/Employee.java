@@ -30,8 +30,7 @@ public class Employee implements Serializable{
         this.mDepartmentId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseContract.EmployeeTable.DEPARTMENT_ID));
     }
 
-    public Employee(int mId, String mDateOfBirth, String mName, String mPlaceOfBirth, Position mPosition, Status mStatus, String mPhone, int mDepartmentId) {
-        this.mId = mId;
+    public Employee(String mDateOfBirth, String mName, String mPlaceOfBirth, Position mPosition, Status mStatus, String mPhone, int mDepartmentId) {
         this.mDateOfBirth = mDateOfBirth;
         this.mName = mName;
         this.mPlaceOfBirth = mPlaceOfBirth;
@@ -39,6 +38,11 @@ public class Employee implements Serializable{
         this.mStatus = mStatus;
         this.mPhone = mPhone;
         this.mDepartmentId = mDepartmentId;
+    }
+
+    public Employee(int mId, String mDateOfBirth, String mName, String mPlaceOfBirth, Position mPosition, Status mStatus, String mPhone, int mDepartmentId) {
+        this(mDateOfBirth, mName, mPlaceOfBirth, mPosition, mStatus, mPhone, mDepartmentId);
+        this.mId = mId;
     }
 
     public int getId() {

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -25,6 +26,7 @@ import com.framgia.nguyen.hrm_6.models.Department;
 import com.framgia.nguyen.hrm_6.models.Employee;
 import com.framgia.nguyen.hrm_6.models.Position;
 import com.framgia.nguyen.hrm_6.models.Status;
+import com.framgia.nguyen.hrm_6.ui.dialogs.DeleteEmployeeDialogFragment;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -38,6 +40,7 @@ import java.util.List;
 public class EmployeeActivity extends AppCompatActivity {
     private static final String TAG = "EmployeeActivity";
     public static final int DATE_PICKER_DIALOG_ID = 999;
+    public static final String CONFIRM_DIALOG_TAG = "CONFIRM_DIALOG_TAG";
     public static final int NEW_EMPLOYEE_REQUEST = 0;
     public static final String EXTRA_DEPARTMENT_ID = "EXTRA_DEPARTMENT_ID";
     public static final String EXTRA_EMPLOYEE = "EXTRA_EMPLOYEE";
@@ -46,6 +49,7 @@ public class EmployeeActivity extends AppCompatActivity {
     private EditText mEditName;
     private EditText mEditPhone;
     private EditText mEditPlaceOfBirth;
+    private Button mButtonDelete;
     private int mDepartmentId;
     private Position mPosition;
     private Status mStatus;
@@ -186,6 +190,14 @@ public class EmployeeActivity extends AppCompatActivity {
         mEditName = (EditText) findViewById(R.id.edit_name);
         mEditPhone = (EditText) findViewById(R.id.edit_phone);
         mEditPlaceOfBirth = (EditText) findViewById(R.id.edit_place_of_birth);
+        mButtonDelete = (Button) findViewById(R.id.button_delete);
+        mButtonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteEmployeeDialogFragment dialogFragment = DeleteEmployeeDialogFragment.newInstance(mEmployee.getId());
+                dialogFragment.show(getSupportFragmentManager(), CONFIRM_DIALOG_TAG);
+            }
+        });
 
         Calendar calendar = Calendar.getInstance();
         mYear = calendar.get(Calendar.YEAR);
@@ -193,6 +205,7 @@ public class EmployeeActivity extends AppCompatActivity {
         mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
         if (mEditMode) {
+            mButtonDelete.setVisibility(View.VISIBLE);
             mEditName.setText(mEmployee.getName());
             mEditPhone.setText(mEmployee.getPhone());
             mEditPlaceOfBirth.setText(mEmployee.getPlaceOfBirth());

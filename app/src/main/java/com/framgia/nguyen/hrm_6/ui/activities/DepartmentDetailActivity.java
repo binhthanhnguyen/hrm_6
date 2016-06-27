@@ -2,15 +2,18 @@ package com.framgia.nguyen.hrm_6.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.framgia.nguyen.hrm_6.R;
 import com.framgia.nguyen.hrm_6.daos.EmployeeDAO;
@@ -20,6 +23,7 @@ import com.framgia.nguyen.hrm_6.ui.adapters.EmployeeListAdapter;
 import com.framgia.nguyen.hrm_6.ui.widget.recyclerview.DividerItemDecoration;
 import com.framgia.nguyen.hrm_6.ui.widget.recyclerview.EndlessRecyclerViewScrollListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +38,11 @@ public class DepartmentDetailActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private Department mDepartment;
     private EmployeeDAO mEmployeeDAO;
+    private EmployeeListAdapter mEmployeeListAdapter;
     private ImageButton mButtonAdd;
+    private SearchView mSearchView;
+    private ProgressBar mProgressBar;
+    private String mQuery;
 
     public static Intent newIntent(Context context, Department department) {
         Intent intent = new Intent(context, DepartmentDetailActivity.class);
@@ -54,7 +62,6 @@ public class DepartmentDetailActivity extends AppCompatActivity {
         mDepartment = (Department) intent.getSerializableExtra(EXTRA_DEPARTMENT);
         mEmployeeDAO = EmployeeDAO.getInstance(getApplicationContext());
         mEmployees = mEmployeeDAO.findEmployeesByDepartmentId(mDepartment.getId(), 0, PER_PAGE);
-
         setupView();
     }
 
@@ -86,20 +93,9 @@ public class DepartmentDetailActivity extends AppCompatActivity {
         textName.setText(mDepartment.getName());
         TextView textDesc = (TextView) findViewById(R.id.text_desc);
         textDesc.setText(mDepartment.getDesc());
-
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
-        final EmployeeListAdapter employeeListAdapter = new EmployeeListAdapter(mEmployees);
-        mRecyclerView.setAdapter(employeeListAdapter);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        mRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                mEmployees.addAll(mEmployeeDAO.findEmployeesByDepartmentId(mDepartment.getId(), totalItemsCount, PER_PAGE));
-                employeeListAdapter.notifyItemRangeChanged(totalItemsCount, mEmployees.size() -1);
-            }
-        });
+        setupRecyclerView();
 
         mButtonAdd = (ImageButton) findViewById(R.id.button_add_employee);
         mButtonAdd.setOnClickListener(new View.OnClickListener() {
@@ -108,10 +104,86 @@ public class DepartmentDetailActivity extends AppCompatActivity {
                 EmployeeActivity.newIntent(v.getContext(), mDepartment.getId());
             }
         });
+
+        mSearchView = (SearchView) findViewById(R.id.search_view);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mQuery = query;
+                new SearchEmployeeTask(query).execute();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                mQuery = null;
+                updateUi();
+                return true;
+            }
+        });
+    }
+
+    private void setupRecyclerView() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mEmployeeListAdapter = new EmployeeListAdapter(mEmployees);
+        mRecyclerView.setAdapter(mEmployeeListAdapter);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        mRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                if(mQuery == null) {
+                    mEmployees.addAll(mEmployeeDAO.findEmployeesByDepartmentId(mDepartment.getId(), totalItemsCount, PER_PAGE));
+                } else {
+                    mEmployees.addAll(mEmployeeDAO.findEmployeesByName(mDepartment.getId(), mQuery, totalItemsCount, PER_PAGE));
+                }
+                mEmployeeListAdapter.notifyItemRangeChanged(totalItemsCount, mEmployees.size() -1);
+            }
+        });
     }
 
     private void updateUi() {
-        mEmployees = mEmployeeDAO.findEmployeesByDepartmentId(mDepartment.getId(), 0, PER_PAGE);
-        setupView();
+        mEmployees.clear();
+        if (mQuery == null) {
+            mEmployees.addAll(mEmployeeDAO.findEmployeesByDepartmentId(mDepartment.getId(), 0, PER_PAGE));
+        } else {
+            mEmployees.addAll(mEmployeeDAO.findEmployeesByName(mDepartment.getId(), mQuery, 0, PER_PAGE));
+        }
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    private class SearchEmployeeTask extends AsyncTask<Void, Void, List<Employee>> {
+        private String mQuery;
+
+        SearchEmployeeTask(String query) {
+            mQuery = query;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressBar.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        protected List<Employee> doInBackground(Void... params) {
+            return mEmployeeDAO.findEmployeesByName(mDepartment.getId(), mQuery, 0, PER_PAGE);
+        }
+
+        @Override
+        protected void onPostExecute(List<Employee> employees) {
+            mEmployees.clear();
+            mEmployees.addAll(employees);
+            mProgressBar.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mRecyclerView.getAdapter().notifyDataSetChanged();
+        }
     }
 }

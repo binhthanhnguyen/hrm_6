@@ -60,8 +60,10 @@ public class EmployeeDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                break;
             case R.id.action_edit:
                 EmployeeActivity.newIntent(this, mEmployee);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

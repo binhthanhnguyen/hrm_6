@@ -72,7 +72,11 @@ public class EmployeeDetailActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mEmployee = EmployeeDAO.getInstance(this).getEmployee(mEmployee.getId());
-        updateUi();
+        if (mEmployee == null) {
+            finish();
+        } else {
+            updateUi();
+        }
     }
 
     private void setupView() {

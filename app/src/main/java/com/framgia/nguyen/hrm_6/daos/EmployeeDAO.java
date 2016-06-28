@@ -53,8 +53,11 @@ public class EmployeeDAO extends DbContentProvider{
         Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null,
                 DatabaseContract.EmployeeTable.ID + " = ?",
                 new String[]{String.valueOf(employeeId)}, null, null, null, null);
-        if (cursor != null)
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
+        } else {
+            return null;
+        }
         Employee employee = new Employee(cursor);
         close();
         return employee;
@@ -162,15 +165,16 @@ public class EmployeeDAO extends DbContentProvider{
         return true;
     }
 
-    public boolean delete(Employee employee) throws SQLException {
+    public boolean delete(int employeeId) throws SQLException {
         open();
+        int result;
         try {
-            mDatabase.delete(DatabaseContract.EmployeeTable.TABLE_NAME, DatabaseContract.EmployeeTable.ID + " = ?", new String[]{String.valueOf(employee.getId())});
+            result = mDatabase.delete(DatabaseContract.EmployeeTable.TABLE_NAME, DatabaseContract.EmployeeTable.ID + " = ?", new String[]{String.valueOf(employeeId)});
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
         close();
-        return true;
+        return result != 0;
     }
 }

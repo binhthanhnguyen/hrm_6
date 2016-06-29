@@ -2,7 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/item_margin">
+    android:paddingTop="@dimen/padding_small"
+    android:paddingRight="@dimen/padding_medium"
+    android:paddingLeft="@dimen/padding_medium"
+    android:paddingBottom="@dimen/padding_small">
 
     <TextView
         android:id="@+id/text_id"
@@ -31,5 +34,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true" />
 </RelativeLayout>

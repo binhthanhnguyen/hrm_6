@@ -113,6 +113,23 @@ public class EmployeeDAO extends DbContentProvider{
         return employees;
     }
 
+    public List<Employee> searchEmployees(String query, int offset, int limit) {
+        List<Employee> employees = new ArrayList<Employee>();
+        open();
+        Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null,
+                DatabaseContract.EmployeeTable.NAME + " LIKE ? OR " + DatabaseContract.EmployeeTable.PHONE + " LIKE ? ",
+                new String[] {"%" + query + "%","%" + query + "%"}, null, null,
+                DatabaseContract.EmployeeTable.NAME + " DESC", offset + ", " + limit);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                employees.add(new Employee(cursor));
+            }
+        }
+        cursor.close();
+        close();
+        return employees;
+    }
+
     public List<Employee> getAllEmployees() throws SQLException {
         List<Employee> employees = new ArrayList<Employee>();
         open();

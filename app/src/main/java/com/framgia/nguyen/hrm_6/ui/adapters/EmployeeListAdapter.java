@@ -1,6 +1,7 @@
 package com.framgia.nguyen.hrm_6.ui.adapters;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.framgia.nguyen.hrm_6.R;
 import com.framgia.nguyen.hrm_6.models.Employee;
+import com.framgia.nguyen.hrm_6.models.Status;
 import com.framgia.nguyen.hrm_6.ui.activities.EmployeeDetailActivity;
 import java.util.List;
 
@@ -38,6 +40,11 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapte
                 EmployeeDetailActivity.newIntent(v.getContext(), employee);
             }
         });
+        if (employee.getStatus() == Status.LEFT_JOB) {
+            holder.mView.setBackgroundColor(Color.GRAY);
+        } else {
+            holder.mView.setBackgroundColor(Color.WHITE);
+        }
     }
 
     @Override

@@ -6,7 +6,8 @@ package com.framgia.nguyen.hrm_6.models;
 public enum Status {
     TRAINEE(0, "Trainee"),
     INTERN(1, "Internship"),
-    OFFICIAL_STAFF(2, "Official Staff");
+    OFFICIAL_STAFF(2, "Official Staff"),
+    LEFT_JOB(3, "Left Job");
     private int mCode;
     private String mDesc;
 

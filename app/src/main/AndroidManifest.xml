@@ -21,8 +21,7 @@
 
         <activity
             android:name=".ui.activities.DepartmentDetailActivity"
-            android:label="@string/label_departments"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/label_departments">
         </activity>
 
         <activity

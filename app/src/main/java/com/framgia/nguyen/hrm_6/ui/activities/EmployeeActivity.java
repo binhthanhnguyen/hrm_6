@@ -215,7 +215,7 @@ public class EmployeeActivity extends AppCompatActivity {
             spinnerStatus.setSelection(mEmployee.getStatus().code());
             if (!mEmployee.getDateOfBirth().isEmpty()) {
                 String date[] = mEmployee.getDateOfBirth().trim().split("-");
-                mMonth = Integer.parseInt(date[0]);
+                mMonth = Integer.parseInt(date[0]) - 1;
                 mDay = Integer.parseInt(date[1]);
                 mYear = Integer.parseInt(date[2]);
             }

@@ -20,14 +20,14 @@ public class Department implements Serializable{
         this.mDesc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.DepartmentTable.DESC));
     }
 
-    public Department(int mId, String mName) {
-        this.mId = mId;
+    public Department(String mName, String mDesc) {
         this.mName = mName;
+        this.mDesc = mDesc;
     }
 
     public Department(int mId, String mName, String mDesc) {
-        this(mId,mName);
-        this.mDesc = mDesc;
+        this(mName, mDesc);
+        this.mId = mId;
     }
 
     public int getId() {

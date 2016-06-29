@@ -31,7 +31,6 @@ public class DepartmentDAO extends DbContentProvider{
     public boolean insert(Department department) throws SQLException{
         open();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DatabaseContract.DepartmentTable.ID, department.getId());
         contentValues.put(DatabaseContract.DepartmentTable.NAME, department.getName());
         contentValues.put(DatabaseContract.DepartmentTable.DESC, department.getDesc());
         try {

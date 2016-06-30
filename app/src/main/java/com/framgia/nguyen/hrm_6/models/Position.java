@@ -4,10 +4,10 @@ package com.framgia.nguyen.hrm_6.models;
  * Created by nguyen on 2/23/16.
  */
 public enum Position {
-    MANAGER(0, "Manager"),
-    DEV(1, "Developer"),
+    DEV(0, "Developer"),
+    BRSE(1, "BRSE"),
     BO(2, "Back Office"),
-    BRSE(3, "Bridge Software Engineer");
+    MANAGER(3, "Manager");
     private int mCode;
     private String mDesc;
 

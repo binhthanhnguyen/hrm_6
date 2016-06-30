@@ -5,6 +5,7 @@
     <string name="action_save">Done</string>
     <string name="action_edit">Edit</string>
     <string name="action_new_department">New Department</string>
+    <string name="action_search">Search</string>
 
     <string name="label_departments">All Departments</string>
     <string name="label_employees">Employees</string>

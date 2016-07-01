@@ -224,9 +224,9 @@ public class EmployeeActivity extends AppCompatActivity {
 
     private void saveEmployee() {
         String dateOfBirth = mTextDateOfBirth.getText().toString();
-        String name = mEditName.getText().toString();
-        String placeOfBirth = mEditPlaceOfBirth.getText().toString();
-        String phone = mEditPhone.getText().toString();
+        String name = mEditName.getText().toString().trim();
+        String placeOfBirth = mEditPlaceOfBirth.getText().toString().trim();
+        String phone = mEditPhone.getText().toString().trim();
         if (!name.isEmpty()) {
             if (mEditMode) {
                 mEmployee.setName(name);
@@ -246,6 +246,7 @@ public class EmployeeActivity extends AppCompatActivity {
                 finish();
             }
         } else {
+            Toast.makeText(this, R.string.message_name_empty, Toast.LENGTH_LONG).show();
             onBackPressed();
         }
     }

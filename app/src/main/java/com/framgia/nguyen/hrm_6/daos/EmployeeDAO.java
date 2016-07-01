@@ -85,7 +85,7 @@ public class EmployeeDAO extends DbContentProvider{
         Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null,
                 DatabaseContract.EmployeeTable.DEPARTMENT_ID + " = ?",
                 new String[] {String.valueOf(departmentId)}, null, null,
-                DatabaseContract.EmployeeTable.NAME + " DESC", offset + ", " + limit);
+                DatabaseContract.EmployeeTable.NAME + " COLLATE NOCASE ASC", offset + ", " + limit);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 employees.add(new Employee(cursor));
@@ -102,7 +102,7 @@ public class EmployeeDAO extends DbContentProvider{
         Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null,
                 DatabaseContract.EmployeeTable.DEPARTMENT_ID + " = ? AND " + DatabaseContract.EmployeeTable.NAME + " LIKE ?",
                 new String[] {String.valueOf(departmentId), "%" + name + "%"}, null, null,
-                DatabaseContract.EmployeeTable.NAME + " DESC", offset + ", " + limit);
+                DatabaseContract.EmployeeTable.NAME + " COLLATE NOCASE ASC", offset + ", " + limit);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 employees.add(new Employee(cursor));
@@ -119,7 +119,7 @@ public class EmployeeDAO extends DbContentProvider{
         Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null,
                 DatabaseContract.EmployeeTable.NAME + " LIKE ? OR " + DatabaseContract.EmployeeTable.PHONE + " LIKE ? ",
                 new String[] {"%" + query + "%","%" + query + "%"}, null, null,
-                DatabaseContract.EmployeeTable.NAME + " DESC", offset + ", " + limit);
+                DatabaseContract.EmployeeTable.NAME + " COLLATE NOCASE ASC", offset + ", " + limit);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 employees.add(new Employee(cursor));
@@ -148,7 +148,7 @@ public class EmployeeDAO extends DbContentProvider{
         List<Employee> employees = new ArrayList<>();
         open();
         Cursor cursor = mDatabase.query(DatabaseContract.EmployeeTable.TABLE_NAME, null, null, null, null, null,
-                DatabaseContract.EmployeeTable.NAME + " DESC", offset + ", " + limit);
+                DatabaseContract.EmployeeTable.NAME + " COLLATE NOCASE ASC", offset + ", " + limit);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 employees.add(new Employee(cursor));

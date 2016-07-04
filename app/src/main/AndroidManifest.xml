@@ -31,7 +31,8 @@
         </activity>
 
         <activity android:name=".ui.activities.EmployeeActivity"
-            android:label="@string/label_new_employee">
+            android:label="@string/label_new_employee"
+            android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
     </application>
 

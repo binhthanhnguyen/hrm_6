@@ -85,8 +85,8 @@ public class EmployeeListFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                mQuery = query;
-                new SearchEmployeeTask(query).execute();
+                mQuery = query.trim();
+                new SearchEmployeeTask(mQuery).execute();
                 return true;
             }
 

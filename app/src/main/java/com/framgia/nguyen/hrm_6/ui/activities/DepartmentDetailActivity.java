@@ -107,8 +107,8 @@ public class DepartmentDetailActivity extends AppCompatActivity {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                mQuery = query;
-                new SearchEmployeeTask(query).execute();
+                mQuery = query.trim();
+                new SearchEmployeeTask(mQuery).execute();
                 return true;
             }
 

@@ -30,8 +30,6 @@ public class EmployeeDetailActivity extends AppCompatActivity {
     private TextView mTextAddress;
     private TextView mTextDateOfBirth;
 
-
-
     public static Intent newIntent(Context context, Employee employee) {
         Intent intent = new Intent(context, EmployeeDetailActivity.class);
         intent.putExtra(EXTRA_EMPLOYEE, employee);
